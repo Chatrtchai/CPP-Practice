@@ -1,6 +1,8 @@
 #include <iostream>
 using namespace std;
 
+/* Sub Class */
+
 class Item {
 private:
     string item_name;
@@ -43,7 +45,22 @@ public:
         return item_count;
     }
 
+    void SetItemName(string name) {
+        item_name = name;
+    }
+
+    void SetItemType(string type_name)
+    {
+        item_type = type_name;
+    }
+
+    void SetItemCount(int n) {
+        item_count = n;
+    }
+
 };
+
+/* Super Class */ 
 
 class Backpack {
 private:
@@ -72,7 +89,8 @@ public:
 
     }
 
-    // Destructor
+    /* Destructor */
+
     ~Backpack()
     {
         for (int i = 0; i < current_position; ++i)
@@ -86,15 +104,18 @@ public:
 
     void AddItem(Item *item) {
 
-        string noun;
-
         items[current_position] = item;
 
-        if (current_capacity + items[current_position]->GetItemCount() <= max_capacity) {
+        string noun;
 
-            current_capacity += items[current_position]->GetItemCount();
+        string i_name = items[current_position]->GetItemName();
+        int i_count = items[current_position]->GetItemCount();
 
-            if (items[current_position]->GetItemCount() >= 2) {
+        if (current_capacity + i_count <= max_capacity) {
+
+            current_capacity += i_count;
+
+            if (i_count >= 2) {
 
                 noun = "items ";
 
@@ -104,15 +125,102 @@ public:
 
             }
 
-            cout << "+ Add " << "(" << items[current_position]->GetItemCount() << ") " << noun << items[current_position]->GetItemName() << " successful!. (" << current_capacity << "/" << max_capacity << ")" << endl;
+            cout << "+ Add " << "(" << i_count << ") " << noun << i_name << " successful!. (" << current_capacity << "/" << max_capacity << ")" << endl;
 
             current_position++;
 
         } else {
-            cout << "** Failed to Added " << " (" << items[current_position]->GetItemCount() << ")" << items[current_position]->GetItemName() << " ! **" << endl;
+            cout << "** Failed to Added " << " (" << i_count << ")" << i_name << " ! **" << endl;
 
             delete items[current_position];
         }
+
+        PrintList();
+
+    }
+
+    void RemoveItem(int index) {
+
+        index -= 1;
+
+        if (index >= 0 && index <= current_position) {
+
+            int n = 0;
+            string i_name = items[index]->GetItemName();
+            string i_type = items[index]->GetItemType();
+            int i_count = items[index]->GetItemCount();
+
+            if (i_count >= 2) {
+
+                while (n <= 0) {
+
+                    cout << "[" << i_name << "]" << " : " << i_type << endl;
+                    cout << "(unit) : ";
+                    cin >> n;
+
+                }
+                
+                // Remove from array
+                if (i_count - n == 0) {
+
+                    current_capacity -= n;
+
+                    cout << "- Remove " << i_name << " successful!. (" << current_capacity << "/" << max_capacity << ")" << endl;
+
+                    delete items[index];
+
+                    // Change index
+                    for (int i = index; i < current_position; i++) {
+                        
+                        items[i] = items[i+1];
+
+                    }
+
+                    current_position -= 1;
+
+                // Already in array
+                } else if (i_count - n > 0) {
+
+                    current_capacity -= n;
+
+                    cout << "- Remove " << "(" << n << ") " << "items " << i_name << " successful!. (" << current_capacity << "/" << max_capacity << ")" << endl;
+
+                    items[index]->SetItemCount(i_count - n);
+
+                } else {
+
+                    cout << "** Failed to Remove " << "(" << n << ") " << i_name << " ! **" << endl;
+
+                }
+
+            // Remove from array
+            } else {
+
+                current_capacity -= 1;
+
+                cout << "- Remove " << i_name << " successful!. (" << current_capacity << "/" << max_capacity << ")" << endl;
+
+                delete items[index];
+
+                // Change index
+                for (int i = index; i < current_position; i++) {
+
+                    items[i] = items[i + 1];
+                    
+                }
+
+                current_position -= 1;
+
+            }
+
+        } else {
+
+            cout << "** Not Found Index **" << endl;
+
+        }
+
+        PrintList();
+
     }
 
     void PrintList() {
@@ -125,7 +233,9 @@ public:
         {
             cout << i + 1 << "         " << items[i]->GetItemName() << " (" << items[i]->GetItemCount() << ")" << endl;
             cout << "  " << "        > " << items[i]->GetItemType() << endl;
-            cout << endl;
+            if (i < current_position - 1) {
+                cout << endl;
+            }
         }
 
         cout << "================================================" << endl;
@@ -167,7 +277,10 @@ int main() {
     NormalBackpack->AddItem(Pants);
     NormalBackpack->AddItem(Trousers);
 
-    // Print List in NormalBackPack
-    NormalBackpack->PrintList();
+    // Remove 1 Equitment in NormalBackpack
+    NormalBackpack->RemoveItem(1);
+
+    // Remove 1 Equitment in NormalBackpack
+    NormalBackpack->RemoveItem(3);
 
 }
