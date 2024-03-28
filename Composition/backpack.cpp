@@ -45,17 +45,17 @@ public:
         return item_count;
     }
 
-    void SetItemName(string name) {
+    void ChangeItemName(string name) {
         item_name = name;
     }
 
-    void SetItemType(string type_name)
+    void ChangeItemType(string type_name)
     {
         item_type = type_name;
     }
 
-    void SetItemCount(int n) {
-        item_count = n;
+    void ChangeItemCount(int number) {
+        item_count = number;
     }
 
 };
@@ -111,6 +111,7 @@ public:
         string i_name = items[current_position]->GetItemName();
         int i_count = items[current_position]->GetItemCount();
 
+        // if amount of item isn't more than max_capacity
         if (current_capacity + i_count <= max_capacity) {
 
             current_capacity += i_count;
@@ -129,6 +130,7 @@ public:
 
             current_position++;
 
+        // else
         } else {
             cout << "** Failed to Added " << " (" << i_count << ")" << i_name << " ! **" << endl;
 
@@ -143,6 +145,7 @@ public:
 
         index -= 1;
 
+        // User doesn't input out of range of index 
         if (index >= 0 && index <= current_position) {
 
             int n = 0;
@@ -185,7 +188,7 @@ public:
 
                     cout << "- Remove " << "(" << n << ") " << "items " << i_name << " successful!. (" << current_capacity << "/" << max_capacity << ")" << endl;
 
-                    items[index]->SetItemCount(i_count - n);
+                    items[index]->ChangeItemCount(i_count - n);
 
                 } else {
 
